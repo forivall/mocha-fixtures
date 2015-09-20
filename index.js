@@ -114,7 +114,6 @@ function buildFixtures(fixturesLoc, options, callback) {
   } else if (options == null) {
     options = {};
   }
-  var defaultFixtureSkip =
   options = _.merge({
     optionsPath: "options",
     // tracuer error tests
