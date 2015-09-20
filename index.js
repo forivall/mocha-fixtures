@@ -12,11 +12,11 @@ function humanize(val, noext) {
   return val.replace(/-/g, " ");
 }
 
-function get(entryName, entryLoc) {
+function get(entryName, entryLoc, options) {
   var suites = [];
 
   var rootOpts = {};
-  var rootOptsLoc = resolve(entryLoc + "/options");
+  var rootOptsLoc = resolve(path.join(entryLoc, options.optionsPath));
   if (rootOptsLoc) rootOpts = require(rootOptsLoc);
 
   _.each(fs.readdirSync(entryLoc), function (suiteName) {
@@ -30,7 +30,7 @@ function get(entryName, entryLoc) {
     };
     suites.push(suite);
 
-    var suiteOptsLoc = resolve(suite.filename + "/options");
+    var suiteOptsLoc = resolve(path.join(suite.filename, options.optionsPath));
     if (suiteOptsLoc) suite.options = require(suiteOptsLoc);
 
     if (fs.statSync(suite.filename).isFile()) {
@@ -43,90 +43,105 @@ function get(entryName, entryLoc) {
     }
 
     function push(taskName, taskDir) {
-      // tracuer error tests
-      if (taskName.indexOf("Error_") >= 0) return;
-
-      var actualLocAlias = suiteName + "/" + taskName + "/actual.js";
-      var expectLocAlias = suiteName + "/" + taskName + "/expected.js";
-      var execLocAlias   = suiteName + "/" + taskName + "/exec.js";
-
-      var actualLoc = taskDir + "/actual.js";
-      var expectLoc = taskDir + "/expected.js";
-      var execLoc   = taskDir + "/exec.js";
-
-      if (resolve.relative(expectLoc + "on")) {
-        expectLoc += "on";
-        expectLocAlias += "on";
-      }
-
-      if (fs.statSync(taskDir).isFile()) {
-        var ext = path.extname(taskDir);
-        if (ext !== ".js" && ext !== ".module.js") return;
-
-        execLoc = taskDir;
-      }
-
-      var taskOpts = _.merge({
-        filenameRelative: expectLocAlias,
-        sourceFileName:   actualLocAlias,
-        sourceMapName:    expectLocAlias
-      }, _.cloneDeep(suite.options));
-
-      var taskOptsLoc = resolve(taskDir + "/options");
-      if (taskOptsLoc) _.merge(taskOpts, require(taskOptsLoc));
+      if (options.skip(taskName)) return;
 
       var test = {
         title: humanize(taskName, true),
         disabled: taskName[0] === ".",
-        options: taskOpts,
-        exec: {
-          loc: execLoc,
-          code: readFile(execLoc),
-          filename: execLocAlias,
-        },
-        actual: {
-          loc: actualLoc,
-          code: readFile(actualLoc),
-          filename: actualLocAlias,
-        },
-        expect: {
-          loc: expectLoc,
-          code: readFile(expectLoc),
-          filename: expectLocAlias
+        options: {}
+      };
+
+      var skip = false;
+
+      _.forOwn(options.fixtures, function(spec, key) {
+        var locAlias = path.join(suiteName, taskName, spec.loc[0]);
+        var loc = path.join(taskDir, spec.loc[0]);
+        for (var i = 1; i < spec.loc.length; i++) {
+          if (resolve.relative(path.join(taskDir, spec.loc[i]))) {
+            locAlias = path.join(suiteName, taskName, spec.loc[i]);
+            loc = path.join(taskDir, spec.loc[i]);
+          }
         }
-      };
+        if (spec.isTaskFile) {
+          if (fs.statSync(taskDir).isFile()) {
+            var ext = path.extname(taskDir);
+            if (ext !== ".js" && ext !== ".module.js") {
+              skip = true;
+              return false;
+            }
 
-      // traceur checks
+            loc = taskDir;
+          }
+        }
+        var fixture = test[key] = {
+          loc: loc,
+          code: readFile(loc),
+          filename: locAlias
+        };
+        if (spec.skip && spec.skip(fixture.code)) {
+          skip = true;
+          return false;
+        }
+      });
 
-      var shouldSkip = function (code) {
-        return code.indexOf("// Error:") >= 0 || code.indexOf("// Skip.") >= 0;
-      };
+      if (skip) { return; }
 
-      if (shouldSkip(test.actual.code) || shouldSkip(test.exec.code)) {
-        return;
-      } else if (test.exec.code.indexOf("// Async.") >= 0) {
-        //test.options.asyncExec = true;
-        return;
-      }
+      var taskOpts = options.getTaskOptions(suite, test);
+
+      var taskOptsLoc = resolve(path.join(taskDir, options.optionsPath));
+      if (taskOptsLoc) _.merge(taskOpts, require(taskOptsLoc));
+
+      test.options = taskOpts;
 
       suite.tests.push(test);
 
-      var sourceMappingsLoc = taskDir + "/source-mappings.json";
-      if (pathExists.sync(sourceMappingsLoc)) {
-        test.sourceMappings = JSON.parse(readFile(sourceMappingsLoc));
-      }
-
-      var sourceMapLoc = taskDir + "/source-map.json";
-      if (pathExists.sync(sourceMapLoc)) {
-        test.sourceMap = JSON.parse(readFile(sourceMapLoc));
-      }
+      _.forOwn(options.data, function(filename, key) {
+        var loc = path.join(taskDir, filename);
+        if (pathExists.sync(loc)) {
+          test[key] = JSON.parse(readFile(loc));
+        }
+      });
     }
   });
 
   return suites;
 }
 
-function buildFixtures(fixturesLoc, callback) {
+function buildFixtures(fixturesLoc, options, callback) {
+  if (typeof options === "function") {
+    callback = options;
+    options = {};
+  } else if (options == null) {
+    options = {};
+  }
+  var defaultFixtureSkip =
+  options = _.merge({
+    optionsPath: "options",
+    // tracuer error tests
+    skip: function(taskName) { return taskName.indexOf("Error_") >= 0; },
+    fixtures: {
+      "exec": { loc: ["exec.js"], skip: function (code) {
+        // traceur checks
+        return code.indexOf("// Error:") >= 0 || code.indexOf("// Skip.") >= 0 || code.indexOf("// Async.") >= 0;
+      }, isTaskFile: true },
+      "actual": { loc: ["actual.js"], skip: function (code) {
+        // traceur checks
+        return code.indexOf("// Error:") >= 0 || code.indexOf("// Skip.") >= 0;
+      }},
+      "expect": { loc: ["expected.js", "expected.json"] },
+    },
+    data: {
+      sourceMappings: "source-mappings.json",
+      sourceMap: "source-map.json"
+    },
+    getTaskOptions: function(suite, test) {
+      return _.merge({
+        filenameRelative: test.expect.filename,
+        sourceFileName:   test.actual.filename,
+        sourceMapName:    test.expect.filename
+      }, _.cloneDeep(suite.options));
+    }
+  }, options);
   try {
     if (callback) return callback();
   } catch (err) {
@@ -142,7 +157,7 @@ function buildFixtures(fixturesLoc, callback) {
     var filename = files[i];
     if (filename[0] === ".") continue;
 
-    fixtures[filename] = get(filename, fixturesLoc + "/" + filename);
+    fixtures[filename] = get(filename, fixturesLoc + "/" + filename, options);
   }
 
   return fixtures;

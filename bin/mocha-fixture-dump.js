@@ -9,3 +9,4 @@ if (!fs.existsSync(fixturesDirectory)) return;
 
 var fixtures = getFixtures(fixturesDirectory);
 fs.writeFileSync(directory + "/test-fixtures.json", JSON.stringify(fixtures));
+console.log("wrote \"" + directory + "/test-fixtures.json" + "\"");
