@@ -118,17 +118,7 @@ function buildFixtures(fixturesLoc, options, callback) {
     optionsPath: "options",
     // tracuer error tests
     skip: function(taskName) { return taskName.indexOf("Error_") >= 0; },
-    fixtures: {
-      "exec": { loc: ["exec.js"], skip: function (code) {
-        // traceur checks
-        return code.indexOf("// Error:") >= 0 || code.indexOf("// Skip.") >= 0 || code.indexOf("// Async.") >= 0;
-      }, isTaskFile: true },
-      "actual": { loc: ["actual.js"], skip: function (code) {
-        // traceur checks
-        return code.indexOf("// Error:") >= 0 || code.indexOf("// Skip.") >= 0;
-      }},
-      "expect": { loc: ["expected.js", "expected.json"] },
-    },
+    fixtures: {},
     data: {
       sourceMappings: "source-mappings.json",
       sourceMap: "source-map.json"
@@ -141,6 +131,20 @@ function buildFixtures(fixturesLoc, options, callback) {
       }, _.cloneDeep(suite.options));
     }
   }, options);
+  // TODO: use lodash fanciness.
+  if (!_.size(options.fixtures)) {
+    options.fixtures = {
+      "exec": { loc: ["exec.js"], skip: function (code) {
+        // traceur checks
+        return code.indexOf("// Error:") >= 0 || code.indexOf("// Skip.") >= 0 || code.indexOf("// Async.") >= 0;
+      }, isTaskFile: true },
+      "actual": { loc: ["actual.js"], skip: function (code) {
+        // traceur checks
+        return code.indexOf("// Error:") >= 0 || code.indexOf("// Skip.") >= 0;
+      }},
+      "expect": { loc: ["expected.js", "expected.json"] },
+    };
+  }
   try {
     if (callback) return callback();
   } catch (err) {
