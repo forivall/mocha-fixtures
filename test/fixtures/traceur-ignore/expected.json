@@ -1,0 +1,16 @@
+{
+  "traceur": [
+    {
+      "options": {},
+      "tests": [],
+      "title": "ArrowFunctions",
+      "filename": "MOCHA_FIXTURES/test/fixtures/traceur-ignore/actual/traceur/ArrowFunctions"
+    },
+    {
+      "options": {},
+      "tests": [],
+      "title": "AsyncFunctions",
+      "filename": "MOCHA_FIXTURES/test/fixtures/traceur-ignore/actual/traceur/AsyncFunctions"
+    }
+  ]
+}
