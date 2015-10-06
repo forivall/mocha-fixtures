@@ -46,6 +46,8 @@ function get(entryName, entryLoc, options) {
       if (options.skip(taskName)) return;
 
       var test = {
+        _taskName: taskName,
+        _taskDir: taskDir,
         title: humanize(taskName, true),
         disabled: taskName[0] === ".",
         options: {}
@@ -62,23 +64,18 @@ function get(entryName, entryLoc, options) {
             loc = path.join(taskDir, spec.loc[i]);
           }
         }
-        if (spec.isTaskFile) {
-          if (fs.statSync(taskDir).isFile()) {
-            var ext = path.extname(taskDir);
-            if (ext !== ".js" && ext !== ".module.js") {
-              skip = true;
-              return false;
-            }
-
-            loc = taskDir;
-          }
-        }
         var fixture = test[key] = {
           loc: loc,
-          code: readFile(loc),
           filename: locAlias
         };
-        if (spec.skip && spec.skip(fixture.code)) {
+        if (_.isFunction(spec.beforeRead)) {
+          if (spec.beforeRead(fixture, test) === false) {
+            skip = true;
+            return false;
+          }
+        }
+        fixture.code = readFile(fixture.loc);
+        if (_.isFunction(spec.afterRead) && spec.afterRead(fixture, test)) {
           skip = true;
           return false;
         }
@@ -92,6 +89,9 @@ function get(entryName, entryLoc, options) {
       if (taskOptsLoc) _.merge(taskOpts, require(taskOptsLoc));
 
       test.options = taskOpts;
+
+      delete test._taskDir;
+      delete test._taskName;
 
       suite.tests.push(test);
 
@@ -107,14 +107,8 @@ function get(entryName, entryLoc, options) {
   return suites;
 }
 
-function buildFixtures(fixturesLoc, options, callback) {
-  if (typeof options === "function") {
-    callback = options;
-    options = {};
-  } else if (options == null) {
-    options = {};
-  }
-  options = _.merge({
+var presets = module.exports.presets = {
+  babel: {
     optionsPath: "options",
     // tracuer error tests
     skip: function(taskName) { return taskName.indexOf("Error_") >= 0; },
@@ -129,22 +123,51 @@ function buildFixtures(fixturesLoc, options, callback) {
         sourceFileName:   test.actual.filename,
         sourceMapName:    test.expect.filename
       }, _.cloneDeep(suite.options));
+    },
+    fixtures: {
+      "exec": {
+        loc: ["exec.js"],
+        beforeRead: function(fixture, test) {
+          if (fs.statSync(test._taskDir).isFile()) {
+            var ext = path.extname(test._taskDir);
+            if (ext !== ".js" && ext !== ".module.js") {
+              return false;
+            }
+            fixture.loc = test._taskDir;
+          }
+        },
+        afterRead: function (fixture, test) {
+          // traceur checks
+          var code = fixture.code;
+          return code.indexOf("// Error:") >= 0 || code.indexOf("// Skip.") >= 0 || code.indexOf("// Async.") >= 0;
+        }
+      },
+      "actual": {
+        loc: ["actual.js"],
+        afterRead: function (fixture, test) {
+          // traceur checks
+          var code = fixture.code;
+          return code.indexOf("// Error:") >= 0 || code.indexOf("// Skip.") >= 0;
+        }
+      },
+      "expect": {
+        loc: ["expected.js", "expected.json"]
+      },
     }
-  }, options);
-  // TODO: use lodash fanciness.
-  if (!_.size(options.fixtures)) {
-    options.fixtures = {
-      "exec": { loc: ["exec.js"], skip: function (code) {
-        // traceur checks
-        return code.indexOf("// Error:") >= 0 || code.indexOf("// Skip.") >= 0 || code.indexOf("// Async.") >= 0;
-      }, isTaskFile: true },
-      "actual": { loc: ["actual.js"], skip: function (code) {
-        // traceur checks
-        return code.indexOf("// Error:") >= 0 || code.indexOf("// Skip.") >= 0;
-      }},
-      "expect": { loc: ["expected.js", "expected.json"] },
-    };
   }
+};
+
+function buildFixtures(fixturesLoc, options, callback) {
+  if (typeof options === "function") {
+    callback = options;
+    options = {};
+  } else if (options == null) {
+    options = {};
+  }
+  if (options.preset) {
+    _.defaultsDeep(options, presets[options.preset]);
+  }
+
   try {
     if (callback) return callback();
   } catch (err) {
@@ -165,8 +188,6 @@ function buildFixtures(fixturesLoc, options, callback) {
 
   return fixtures;
 }
-
-//
 
 buildFixtures.readFile = readFile;
 
