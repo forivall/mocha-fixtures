@@ -1,0 +1,70 @@
+{
+  "exec-and-nested-options": [
+    {
+      "options": {
+        "plugins": [
+          "transform-undeclared-variables-check"
+        ]
+      },
+      "tests": [
+        {
+          "title": "declared",
+          "disabled": false,
+          "options": {
+            "filenameRelative": "test/declared/expected.js",
+            "sourceFileName": "test/declared/actual.js",
+            "sourceMapName": "test/declared/expected.js",
+            "plugins": [
+              "transform-undeclared-variables-check"
+            ]
+          },
+          "exec": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/declared/exec.js",
+            "code": "function foo() {\n  \n}\n\nfoo();",
+            "filename": "test/declared/exec.js"
+          },
+          "actual": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/declared/actual.js",
+            "code": "",
+            "filename": "test/declared/actual.js"
+          },
+          "expect": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/declared/expected.js",
+            "code": "",
+            "filename": "test/declared/expected.js"
+          }
+        },
+        {
+          "title": "undeclared",
+          "disabled": false,
+          "options": {
+            "filenameRelative": "test/undeclared/expected.js",
+            "sourceFileName": "test/undeclared/actual.js",
+            "sourceMapName": "test/undeclared/expected.js",
+            "plugins": [
+              "transform-undeclared-variables-check"
+            ],
+            "throws": "Reference to undeclared variable"
+          },
+          "exec": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/undeclared/exec.js",
+            "code": "foo();",
+            "filename": "test/undeclared/exec.js"
+          },
+          "actual": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/undeclared/actual.js",
+            "code": "",
+            "filename": "test/undeclared/actual.js"
+          },
+          "expect": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/undeclared/expected.js",
+            "code": "",
+            "filename": "test/undeclared/expected.js"
+          }
+        }
+      ],
+      "title": "test",
+      "filename": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test"
+    }
+  ]
+}
