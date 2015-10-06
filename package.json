@@ -14,5 +14,12 @@
   },
   "bin": {
     "mocha-fixture-dump": "./bin/mocha-fixture-dump.js"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "devDependencies": {
+    "chai": "^3.3.0",
+    "lodash": "^3.10.1"
   }
 }

@@ -1,0 +1,35 @@
+{
+  "core": [
+    {
+      "options": {},
+      "tests": [
+        {
+          "title": "1",
+          "disabled": false,
+          "options": {
+            "filenameRelative": "uncategorised/1/expected.json",
+            "sourceFileName": "uncategorised/1/actual.js",
+            "sourceMapName": "uncategorised/1/expected.json"
+          },
+          "exec": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/json-and-nested/actual/core/uncategorised/1/exec.js",
+            "code": "",
+            "filename": "uncategorised/1/exec.js"
+          },
+          "actual": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/json-and-nested/actual/core/uncategorised/1/actual.js",
+            "code": "this",
+            "filename": "uncategorised/1/actual.js"
+          },
+          "expect": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/json-and-nested/actual/core/uncategorised/1/expected.json",
+            "code": "{\n  \"type\": \"File\",\n  \"start\": 0,\n  \"end\": 4,\n  \"loc\": {\n    \"start\": {\n      \"line\": 1,\n      \"column\": 0\n    },\n    \"end\": {\n      \"line\": 1,\n      \"column\": 4\n    }\n  },\n  \"program\": {\n    \"type\": \"Program\",\n    \"start\": 0,\n    \"end\": 4,\n    \"loc\": {\n      \"start\": {\n        \"line\": 1,\n        \"column\": 0\n      },\n      \"end\": {\n        \"line\": 1,\n        \"column\": 4\n      }\n    },\n    \"sourceType\": \"script\",\n    \"body\": [\n      {\n        \"type\": \"ExpressionStatement\",\n        \"start\": 0,\n        \"end\": 4,\n        \"loc\": {\n          \"start\": {\n            \"line\": 1,\n            \"column\": 0\n          },\n          \"end\": {\n            \"line\": 1,\n            \"column\": 4\n          }\n        },\n        \"expression\": {\n          \"type\": \"ThisExpression\",\n          \"start\": 0,\n          \"end\": 4,\n          \"loc\": {\n            \"start\": {\n              \"line\": 1,\n              \"column\": 0\n            },\n            \"end\": {\n              \"line\": 1,\n              \"column\": 4\n            }\n          }\n        }\n      }\n    ]\n  }\n}",
+            "filename": "uncategorised/1/expected.json"
+          }
+        }
+      ],
+      "title": "uncategorised",
+      "filename": "MOCHA_FIXTURES/test/fixtures/json-and-nested/actual/core/uncategorised"
+    }
+  ]
+}

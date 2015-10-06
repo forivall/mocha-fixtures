@@ -1,0 +1,59 @@
+{
+  "basic": [
+    {
+      "options": {},
+      "tests": [
+        {
+          "title": "actual",
+          "disabled": false,
+          "options": {
+            "filenameRelative": "test/actual.js/expected.js",
+            "sourceFileName": "test/actual.js/actual.js",
+            "sourceMapName": "test/actual.js/expected.js"
+          },
+          "exec": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/actual.js",
+            "code": "this.is.in.a.test;",
+            "filename": "test/actual.js/exec.js"
+          },
+          "actual": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/actual.js/actual.js",
+            "code": "",
+            "filename": "test/actual.js/actual.js"
+          },
+          "expect": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/actual.js/expected.js",
+            "code": "",
+            "filename": "test/actual.js/expected.js"
+          }
+        },
+        {
+          "title": "expected",
+          "disabled": false,
+          "options": {
+            "filenameRelative": "test/expected.js/expected.js",
+            "sourceFileName": "test/expected.js/actual.js",
+            "sourceMapName": "test/expected.js/expected.js"
+          },
+          "exec": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/expected.js",
+            "code": "this.is[\"in\"].a.test;",
+            "filename": "test/expected.js/exec.js"
+          },
+          "actual": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/expected.js/actual.js",
+            "code": "",
+            "filename": "test/expected.js/actual.js"
+          },
+          "expect": {
+            "loc": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/expected.js/expected.js",
+            "code": "",
+            "filename": "test/expected.js/expected.js"
+          }
+        }
+      ],
+      "title": "test",
+      "filename": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test"
+    }
+  ]
+}
