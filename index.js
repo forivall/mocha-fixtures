@@ -43,7 +43,7 @@ function get(entryName, entryLoc, options) {
     }
 
     function push(taskName, taskDir) {
-      if (options.skip(taskName)) return;
+      if (options.skip && options.skip(taskName)) return;
 
       var test = {
         _taskName: taskName,
