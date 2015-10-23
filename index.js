@@ -43,7 +43,7 @@ function get(entryName, entryLoc, options) {
     }
 
     function push(taskName, taskDir) {
-      if (options.skip && options.skip(taskName)) return;
+      if (options.skip && options.skip(taskName, taskDir)) return;
 
       var test = {
         _taskName: taskName,
@@ -182,6 +182,8 @@ function buildFixtures(fixturesLoc, options, callback) {
   for (var i = 0; i < files.length; i++) {
     var filename = files[i];
     if (filename[0] === ".") continue;
+    var stats = fs.statSync(fixturesLoc + "/" + filename);
+    if (!stats.isDirectory()) continue;
 
     fixtures[filename] = get(filename, fixturesLoc + "/" + filename, options);
   }
