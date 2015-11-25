@@ -49,7 +49,7 @@ function get(entryName, entryLoc, options) {
         _taskName: taskName,
         _taskDir: taskDir,
         title: humanize(taskName, true),
-        disabled: taskName[0] === ".",
+        disabled: options.disabled ? options.disabled(taskName, taskDir) : taskName[0] === ".",
         options: {}
       };
 
