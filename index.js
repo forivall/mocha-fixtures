@@ -195,7 +195,7 @@ buildFixtures.readFile = readFile;
 
 function readFile(filename) {
   if (pathExists.sync(filename)) {
-    var file = trimRight(fs.readFileSync(filename, "utf8"));
+    var file = fs.readFileSync(filename, "utf8");
     file = file.replace(/\r\n/g, "\n");
     return file;
   } else {

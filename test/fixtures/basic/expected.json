@@ -13,7 +13,7 @@
           },
           "exec": {
             "loc": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/actual.js",
-            "code": "this.is.in.a.test;",
+            "code": "this.is.in.a.test;\n",
             "filename": "test/actual.js/exec.js"
           },
           "actual": {
@@ -37,7 +37,7 @@
           },
           "exec": {
             "loc": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/expected.js",
-            "code": "this.is[\"in\"].a.test;",
+            "code": "this.is[\"in\"].a.test;\n",
             "filename": "test/expected.js/exec.js"
           },
           "actual": {

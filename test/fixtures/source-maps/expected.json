@@ -18,12 +18,12 @@
           },
           "actual": {
             "loc": "MOCHA_FIXTURES/test/fixtures/source-maps/actual/transformation/source-maps/full/actual.js",
-            "code": "arr.map(x => x * x);",
+            "code": "arr.map(x => x * x);\n",
             "filename": "source-maps/full/actual.js"
           },
           "expect": {
             "loc": "MOCHA_FIXTURES/test/fixtures/source-maps/actual/transformation/source-maps/full/expected.js",
-            "code": "arr.map(function (x) {\n  return x * x;\n});",
+            "code": "arr.map(function (x) {\n  return x * x;\n});\n",
             "filename": "source-maps/full/expected.js"
           },
           "sourceMap": {

@@ -18,7 +18,7 @@
           },
           "actual": {
             "loc": "MOCHA_FIXTURES/test/fixtures/json-and-nested/actual/core/uncategorised/1/actual.js",
-            "code": "this",
+            "code": "this\n",
             "filename": "uncategorised/1/actual.js"
           },
           "expect": {

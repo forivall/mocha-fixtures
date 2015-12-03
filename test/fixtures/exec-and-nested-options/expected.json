@@ -20,7 +20,7 @@
           },
           "exec": {
             "loc": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/declared/exec.js",
-            "code": "function foo() {\n  \n}\n\nfoo();",
+            "code": "function foo() {\n  \n}\n\nfoo();\n",
             "filename": "test/declared/exec.js"
           },
           "actual": {
@@ -48,7 +48,7 @@
           },
           "exec": {
             "loc": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/undeclared/exec.js",
-            "code": "foo();",
+            "code": "foo();\n",
             "filename": "test/undeclared/exec.js"
           },
           "actual": {
