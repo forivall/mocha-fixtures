@@ -6,11 +6,7 @@
         {
           "title": "full",
           "disabled": false,
-          "options": {
-            "filenameRelative": "source-maps/full/expected.js",
-            "sourceFileName": "source-maps/full/actual.js",
-            "sourceMapName": "source-maps/full/expected.js"
-          },
+          "options": {},
           "exec": {
             "loc": "MOCHA_FIXTURES/test/fixtures/source-maps/actual/transformation/source-maps/full/exec.js",
             "code": "",
@@ -18,12 +14,12 @@
           },
           "actual": {
             "loc": "MOCHA_FIXTURES/test/fixtures/source-maps/actual/transformation/source-maps/full/actual.js",
-            "code": "arr.map(x => x * x);\n",
+            "code": "arr.map(x => x * x);",
             "filename": "source-maps/full/actual.js"
           },
           "expect": {
             "loc": "MOCHA_FIXTURES/test/fixtures/source-maps/actual/transformation/source-maps/full/expected.js",
-            "code": "arr.map(function (x) {\n  return x * x;\n});\n",
+            "code": "arr.map(function (x) {\n  return x * x;\n});",
             "filename": "source-maps/full/expected.js"
           },
           "sourceMap": {

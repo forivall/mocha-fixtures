@@ -10,17 +10,10 @@
         {
           "title": "declared",
           "disabled": false,
-          "options": {
-            "filenameRelative": "test/declared/expected.js",
-            "sourceFileName": "test/declared/actual.js",
-            "sourceMapName": "test/declared/expected.js",
-            "plugins": [
-              "transform-undeclared-variables-check"
-            ]
-          },
+          "options": {},
           "exec": {
             "loc": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/declared/exec.js",
-            "code": "function foo() {\n  \n}\n\nfoo();\n",
+            "code": "function foo() {\n  \n}\n\nfoo();",
             "filename": "test/declared/exec.js"
           },
           "actual": {
@@ -38,17 +31,11 @@
           "title": "undeclared",
           "disabled": false,
           "options": {
-            "filenameRelative": "test/undeclared/expected.js",
-            "sourceFileName": "test/undeclared/actual.js",
-            "sourceMapName": "test/undeclared/expected.js",
-            "plugins": [
-              "transform-undeclared-variables-check"
-            ],
             "throws": "Reference to undeclared variable"
           },
           "exec": {
             "loc": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/undeclared/exec.js",
-            "code": "foo();\n",
+            "code": "foo();",
             "filename": "test/undeclared/exec.js"
           },
           "actual": {

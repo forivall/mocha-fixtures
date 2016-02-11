@@ -27,7 +27,7 @@ function tryRequireOrWrite(modulePath, data) {
 
 function testFixture(fixtureName) {
   test(fixtureName, function () {
-    var settings = require('./fixtures/' + fixtureName + '/settings.json');
+    var settings = require('./fixtures/' + fixtureName + '/settings');
     var actual = buildFixtures(__dirname + '/fixtures/' + fixtureName + '/actual', settings);
     var expected = tryRequireOrWrite('./fixtures/' + fixtureName + '/expected.json', actual);
     expect(_.cloneDeep(actual, pathCustomizer)).to.deep.equal(expected);

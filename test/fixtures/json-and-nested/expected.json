@@ -6,11 +6,7 @@
         {
           "title": "1",
           "disabled": false,
-          "options": {
-            "filenameRelative": "uncategorised/1/expected.json",
-            "sourceFileName": "uncategorised/1/actual.js",
-            "sourceMapName": "uncategorised/1/expected.json"
-          },
+          "options": {},
           "exec": {
             "loc": "MOCHA_FIXTURES/test/fixtures/json-and-nested/actual/core/uncategorised/1/exec.js",
             "code": "",
@@ -18,7 +14,7 @@
           },
           "actual": {
             "loc": "MOCHA_FIXTURES/test/fixtures/json-and-nested/actual/core/uncategorised/1/actual.js",
-            "code": "this\n",
+            "code": "this",
             "filename": "uncategorised/1/actual.js"
           },
           "expect": {

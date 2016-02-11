@@ -98,7 +98,11 @@ function get(entryLoc, options) {
           }
         }
         fixture.code = readFile(fixture.loc);
-        if (options.trim) fixture.code = trimRight(fixture.code);
+        if (fixture.code === null && options.defaultCode !== undefined) fixture.code = options.defaultCode;
+        if (fixture.code !== null) {
+          if (options.trim) fixture.code = trimRight(fixture.code);
+          if (options.normalizeLineEndings) fixture.code = fixture.code.replace(/\r\n/g, "\n");
+        }
         if (_.isFunction(spec.afterRead) && spec.afterRead(fixture, test)) {
           skip = true;
           return false;
@@ -122,7 +126,7 @@ function get(entryLoc, options) {
       _.forOwn(options.data, function(filename, key) {
         var loc = path.join(taskDir, filename);
         if (pathExists.sync(loc)) {
-          test[key] = JSON.parse(readFile(loc));
+          test[key] = JSON.parse(readFile(loc) || "{}");
         }
       });
     }
@@ -135,6 +139,8 @@ var presets = module.exports.presets = {
   babel: {
     optionsPath: "options",
     trim: true,
+    normalizeLineEndings: true,
+    defaultCode: "",
     // tracuer error tests
     skip: function(taskName) { return taskName.indexOf("Error_") >= 0; },
     data: {
@@ -212,11 +218,9 @@ buildFixtures.readFile = readFile;
 buildFixtures.get = get;
 
 function readFile(filename) {
-  if (pathExists.sync(filename)) {
-    var file = fs.readFileSync(filename, "utf8");
-    file = file.replace(/\r\n/g, "\n");
-    return file;
-  } else {
-    return "";
+  try {
+    return fs.readFileSync(filename, "utf8");
+  } catch (e) {
+    return null;
   }
 }

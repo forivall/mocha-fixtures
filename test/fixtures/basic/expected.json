@@ -6,14 +6,10 @@
         {
           "title": "actual",
           "disabled": false,
-          "options": {
-            "filenameRelative": "test/actual.js/expected.js",
-            "sourceFileName": "test/actual.js/actual.js",
-            "sourceMapName": "test/actual.js/expected.js"
-          },
+          "options": {},
           "exec": {
             "loc": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/actual.js",
-            "code": "this.is.in.a.test;\n",
+            "code": "this.is.in.a.test;",
             "filename": "test/actual.js/exec.js"
           },
           "actual": {
@@ -30,14 +26,10 @@
         {
           "title": "expected",
           "disabled": false,
-          "options": {
-            "filenameRelative": "test/expected.js/expected.js",
-            "sourceFileName": "test/expected.js/actual.js",
-            "sourceMapName": "test/expected.js/expected.js"
-          },
+          "options": {},
           "exec": {
             "loc": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/expected.js",
-            "code": "this.is[\"in\"].a.test;\n",
+            "code": "this.is[\"in\"].a.test;",
             "filename": "test/expected.js/exec.js"
           },
           "actual": {
