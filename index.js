@@ -36,9 +36,10 @@ function shouldIgnore(name, blacklist) {
 
 function get(entryLoc, options) {
   var suites = [];
+  var optionsPath = options.optionsPath || "options";
 
   var rootOpts = {};
-  var rootOptsLoc = resolve(path.join(entryLoc, options.optionsPath));
+  var rootOptsLoc = resolve(path.join(entryLoc, optionsPath));
   if (rootOptsLoc) rootOpts = require(rootOptsLoc);
 
   _.each(fs.readdirSync(entryLoc), function (suiteName) {
@@ -54,7 +55,7 @@ function get(entryLoc, options) {
     assertDirectory(suite.filename);
     suites.push(suite);
 
-    var suiteOptsLoc = resolve(path.join(suite.filename, options.optionsPath));
+    var suiteOptsLoc = resolve(path.join(suite.filename, optionsPath));
     if (suiteOptsLoc) suite.options = require(suiteOptsLoc);
 
 
@@ -108,7 +109,7 @@ function get(entryLoc, options) {
 
       var taskOpts = options.getTaskOptions ? options.getTaskOptions(suite, test) : {};
 
-      var taskOptsLoc = resolve(path.join(taskDir, options.optionsPath));
+      var taskOptsLoc = resolve(path.join(taskDir, optionsPath));
       if (taskOptsLoc) _.merge(taskOpts, require(taskOptsLoc));
 
       test.options = taskOpts;
