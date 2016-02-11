@@ -5,6 +5,7 @@
       "tests": [
         {
           "title": "full",
+          "filename": "MOCHA_FIXTURES/test/fixtures/source-maps/actual/transformation/source-maps/full",
           "disabled": false,
           "options": {},
           "exec": {

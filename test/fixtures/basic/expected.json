@@ -5,6 +5,7 @@
       "tests": [
         {
           "title": "actual",
+          "filename": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/actual.js",
           "disabled": false,
           "options": {},
           "exec": {
@@ -25,6 +26,7 @@
         },
         {
           "title": "expected",
+          "filename": "MOCHA_FIXTURES/test/fixtures/basic/actual/basic/test/expected.js",
           "disabled": false,
           "options": {},
           "exec": {

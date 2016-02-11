@@ -5,6 +5,7 @@
       "tests": [
         {
           "title": "1",
+          "filename": "MOCHA_FIXTURES/test/fixtures/json-and-nested/actual/core/uncategorised/1",
           "disabled": false,
           "options": {},
           "exec": {

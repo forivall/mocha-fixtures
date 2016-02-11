@@ -9,6 +9,7 @@
       "tests": [
         {
           "title": "declared",
+          "filename": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/declared",
           "disabled": false,
           "options": {},
           "exec": {
@@ -29,6 +30,7 @@
         },
         {
           "title": "undeclared",
+          "filename": "MOCHA_FIXTURES/test/fixtures/exec-and-nested-options/actual/exec-and-nested-options/test/undeclared",
           "disabled": false,
           "options": {
             "throws": "Reference to undeclared variable"

@@ -70,7 +70,7 @@ function get(entryLoc, options) {
 
       var test = {
         _taskName: taskName,
-        _taskDir: taskDir,
+        filename: taskDir,
         title: humanize(taskName, true),
         disabled: options.disabled ? options.disabled(taskName, taskDir) : taskName[0] === ".",
         options: {}
@@ -118,7 +118,6 @@ function get(entryLoc, options) {
 
       test.options = taskOpts;
 
-      delete test._taskDir;
       delete test._taskName;
 
       suite.tests.push(test);
@@ -151,12 +150,12 @@ var presets = module.exports.presets = {
       "exec": {
         loc: ["exec.js"],
         beforeRead: function(fixture, test) {
-          if (fs.statSync(test._taskDir).isFile()) {
-            var ext = path.extname(test._taskDir);
+          if (fs.statSync(test.filename).isFile()) {
+            var ext = path.extname(test.filename);
             if (ext !== ".js" && ext !== ".module.js") {
               return false;
             }
-            fixture.loc = test._taskDir;
+            fixture.loc = test.filename;
           }
         },
         afterRead: function (fixture, test) {
