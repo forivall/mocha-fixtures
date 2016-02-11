@@ -12,7 +12,29 @@ function humanize(val, noext) {
   return val.replace(/-/g, " ");
 }
 
-function get(entryName, entryLoc, options) {
+function assertDirectory(loc) {
+  if (!fs.statSync(loc).isDirectory()) {
+    throw new Error("Expected " + loc + " to be a directory.");
+  }
+}
+
+function shouldIgnore(name, blacklist) {
+  if (blacklist && blacklist.indexOf(name) >= 0) {
+    return true;
+  }
+
+  if (name[0] === ".") return true;
+
+  var ext = path.extname(name);
+  if (ext === ".md") return true;
+
+  var base = path.basename(name, ext);
+  if (base === "LICENSE" || base === "options") return true;
+
+  return false;
+}
+
+function get(entryLoc, options) {
   var suites = [];
 
   var rootOpts = {};
@@ -20,7 +42,7 @@ function get(entryName, entryLoc, options) {
   if (rootOptsLoc) rootOpts = require(rootOptsLoc);
 
   _.each(fs.readdirSync(entryLoc), function (suiteName) {
-    if (suiteName[0] === ".") return;
+    if (shouldIgnore(suiteName)) return;
 
     var suite = {
       options: _.clone(rootOpts),
@@ -28,19 +50,19 @@ function get(entryName, entryLoc, options) {
       title: humanize(suiteName),
       filename: entryLoc + "/" + suiteName
     };
+
+    assertDirectory(suite.filename);
     suites.push(suite);
 
     var suiteOptsLoc = resolve(path.join(suite.filename, options.optionsPath));
     if (suiteOptsLoc) suite.options = require(suiteOptsLoc);
 
-    if (fs.statSync(suite.filename).isFile()) {
-      push(suiteName, suite.filename);
-    } else {
-      _.each(fs.readdirSync(suite.filename), function (taskName) {
-        var taskDir = suite.filename + "/" + taskName;
-        push(taskName, taskDir);
-      });
-    }
+
+    _.each(fs.readdirSync(suite.filename), function (taskName) {
+      if (shouldIgnore(taskName)) return;
+      var taskDir = suite.filename + "/" + taskName;
+      push(taskName, taskDir);
+    });
 
     function push(taskName, taskDir) {
       if (options.skip && options.skip(taskName, taskDir)) return;
@@ -75,6 +97,7 @@ function get(entryName, entryLoc, options) {
           }
         }
         fixture.code = readFile(fixture.loc);
+        if (options.trim) fixture.code = trimRight(fixture.code);
         if (_.isFunction(spec.afterRead) && spec.afterRead(fixture, test)) {
           skip = true;
           return false;
@@ -83,7 +106,7 @@ function get(entryName, entryLoc, options) {
 
       if (skip) { return; }
 
-      var taskOpts = options.getTaskOptions(suite, test);
+      var taskOpts = options.getTaskOptions ? options.getTaskOptions(suite, test) : {};
 
       var taskOptsLoc = resolve(path.join(taskDir, options.optionsPath));
       if (taskOptsLoc) _.merge(taskOpts, require(taskOptsLoc));
@@ -110,19 +133,12 @@ function get(entryName, entryLoc, options) {
 var presets = module.exports.presets = {
   babel: {
     optionsPath: "options",
+    trim: true,
     // tracuer error tests
     skip: function(taskName) { return taskName.indexOf("Error_") >= 0; },
-    fixtures: {},
     data: {
       sourceMappings: "source-mappings.json",
       sourceMap: "source-map.json"
-    },
-    getTaskOptions: function(suite, test) {
-      return _.merge({
-        filenameRelative: test.expect.filename,
-        sourceFileName:   test.actual.filename,
-        sourceMapName:    test.expect.filename
-      }, _.cloneDeep(suite.options));
     },
     fixtures: {
       "exec": {
@@ -185,13 +201,14 @@ function buildFixtures(fixturesLoc, options, callback) {
     var stats = fs.statSync(fixturesLoc + "/" + filename);
     if (!stats.isDirectory()) continue;
 
-    fixtures[filename] = get(filename, fixturesLoc + "/" + filename, options);
+    fixtures[filename] = get(fixturesLoc + "/" + filename, options);
   }
 
   return fixtures;
 }
 
 buildFixtures.readFile = readFile;
+buildFixtures.get = get;
 
 function readFile(filename) {
   if (pathExists.sync(filename)) {
